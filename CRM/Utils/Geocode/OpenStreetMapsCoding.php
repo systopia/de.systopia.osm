@@ -69,6 +69,7 @@ class CRM_Utils_Geocode_OpenStreetMapsCoding {
 
     $params = array();
 
+    //TODO: is there a more failsafe format for street and street-number?
     if (CRM_Utils_Array::value('street_address', $values)) {
       $params['street'] = $values['street_address'];
     }
@@ -114,94 +115,27 @@ class CRM_Utils_Geocode_OpenStreetMapsCoding {
     foreach ($params as $key => $value) {
       $url .= '&' . urlencode($key) . '=' . urlencode($value);
     }
-    error_log($url);
 
     require_once 'HTTP/Request.php';
     $request = new HTTP_Request($url);
     $request->sendRequest();
     $string = $request->getResponseBody();
-    // see CRM-11359 for why we suppress errors with @
     $json = json_decode($string);
-    // error_log($string);
 
-    // $string couldn't be decoded
+    // $string couldn't be decoded or array is empty
     if (!$json) {
       CRM_Core_Error::debug_var('Geocoding failed.  No results for: ' . $url);
       return FALSE;
     }
-    $ret = $json[0];
+    $place = $json[0];
 
     // TODO: Process other relevant data to update address
-    if (!empty($ret)) {
-      $values['geo_code_1'] = $ret->lat;
-      $values['geo_code_2'] = $ret->lon;
+    if (array_key_exists('lat', $place) && array_key_exists('lon', $place)) {
+      $values['geo_code_1'] = $place->lat;
+      $values['geo_code_2'] = $place->lon;
       return TRUE;
+    } else {
+      return FALSE;
     }
-
-
-    // if (is_a($xml->results->Result, 'SimpleXMLElement')) {
-    //   $result = array();
-    //   $result = get_object_vars($xml->results->Result);
-    //   foreach ($result as $key => $val) {
-    //     if (is_scalar($val) &&
-    //       strlen($val)
-    //     ) {
-    //       $ret[(string) $key] = (string) $val;
-    //     }
-    //   }
-
-    //   $values['geo_code_1'] = $ret['latitude'];
-    //   $values['geo_code_2'] = $ret['longitude'];
-
-    //   if ($ret['postal']) {
-    //     $current_pc = CRM_Utils_Array::value('postal_code', $values);
-    //     $skip_postal = FALSE;
-
-    //     if ($current_pc) {
-    //       $current_pc_suffix = CRM_Utils_Array::value('postal_code_suffix', $values);
-    //       $current_pc_complete = $current_pc . $current_pc_suffix;
-    //       $new_pc_complete = preg_replace("/[+-]/", '', $ret['postal']);
-
-    //       // if a postal code was already entered, don't change it, except to make it more precise
-    //       if (strpos($new_pc_complete, $current_pc_complete) !== 0) {
-    //         // Don't bother anonymous users with the message - they can't change a form they just submitted anyway
-    //         if (CRM_Utils_System::isUserLoggedIn()) {
-    //           $msg = ts('The Yahoo Geocoding system returned a different postal code (%1) than the one you entered (%2). If you want the Yahoo value, please delete the current postal code and save again.', array(
-    //             1 => $ret['postal'],
-    //             2 => $current_pc_suffix ? "$current_pc-$current_pc_suffix" : $current_pc
-    //           ));
-
-    //           CRM_Core_Session::setStatus($msg, ts('Postal Code Mismatch'), 'error');
-    //         }
-    //         $skip_postal = TRUE;
-    //       }
-    //     }
-
-    //     if (!$skip_postal) {
-    //       $values['postal_code'] = $ret['postal'];
-
-    //       /* the following logic to split the string was borrowed from
-    //          CRM/Core/BAO/Address.php -- CRM_Core_BAO_Address::fixAddress.
-    //          This is actually the function that calls the geocoding
-    //          script to begin with, but the postal code business takes
-    //          place before geocoding gets called.
-    //       */
-
-    //       if (preg_match('/^(\d{4,5})[+-](\d{4})$/',
-    //         $ret['postal'],
-    //         $match
-    //       )
-    //       ) {
-    //         $values['postal_code'] = $match[1];
-    //         $values['postal_code_suffix'] = $match[2];
-    //       }
-    //     }
-    //   }
-    //   return TRUE;
-    // }
-
-    // reset the geo code values if we did not get any good values
-    $values['geo_code_1'] = $values['geo_code_2'] = 'null';
-    return FALSE;
   }
 }
