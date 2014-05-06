@@ -109,6 +109,13 @@ class CRM_Utils_Geocode_OpenStreetMapsCoding {
       $params['country'] = $values['country'];
     }
 
+    // There should be at least a city or postal_code, a street and a country
+    if (!(array_key_exists('street', $params)
+        && array_key_exists('country', $params)
+        && (array_key_exists('city', $params) || array_key_exists('postalcode', $params)))) {
+      return FALSE;
+    }
+
     $params['addressdetails'] = '1';
     $url = "http://" . self::$_server . self::$_uri;
     $url .= '?format=json';
