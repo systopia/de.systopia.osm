@@ -113,6 +113,8 @@ class CRM_Utils_Geocode_OpenStreetMapsCoding {
     if (!(array_key_exists('street', $params)
         && array_key_exists('country', $params)
         && (array_key_exists('city', $params) || array_key_exists('postalcode', $params)))) {
+      CRM_Core_Error::debug_log_message('Geocoding failed. Address is not complete.');
+      $values['geo_code_1'] = $values['geo_code_2'] = 'null';
       return FALSE;
     }
 
@@ -125,23 +127,34 @@ class CRM_Utils_Geocode_OpenStreetMapsCoding {
 
     require_once 'HTTP/Request.php';
     $request = new HTTP_Request($url);
+    // TODO:
+    // If sendRequest fails a Network-Error-Message pops up and changes to the address
+    // won't be saved.
+    // We tried to do an Exception-catch around sendRequest but for any strange reasons
+    // it didn't helped.
     $request->sendRequest();
     $string = $request->getResponseBody();
     $json = json_decode($string);
 
-    // $string couldn't be decoded or array is empty
-    if (!$json) {
-      CRM_Core_Error::debug_var('Geocoding failed.  No results for: ' . $url);
+    if (is_null($json)) {
+      // $string could not be encoded; maybe the service is down...
+      CRM_Core_Error::debug_log_message('Geocoding failed. "' . $string . '" is no valid json-code. (' . $url . ')');
       return FALSE;
-    }
-    $place = $json[0];
 
-    // TODO: Process other relevant data to update address
-    if (array_key_exists('lat', $place) && array_key_exists('lon', $place)) {
-      $values['geo_code_1'] = $place->lat;
-      $values['geo_code_2'] = $place->lon;
+    } elseif (count($json) == 0) {
+      // array is empty; address is probably invalid...
+      CRM_Core_Error::debug_log_message('Geocoding failed.  No results for: ' . $url);
+      $values['geo_code_1'] = $values['geo_code_2'] = 'null';
+      return FALSE;
+
+    } elseif (array_key_exists('lat', $json[0]) && array_key_exists('lon', $json[0])) {
+      // TODO: Process other relevant data to update address
+      $values['geo_code_1'] = $json[0]->lat;
+      $values['geo_code_2'] = $json[0]->lon;
       return TRUE;
+
     } else {
+      // don't know what went wrong... we got an array, but without lat and lon.
       return FALSE;
     }
   }
