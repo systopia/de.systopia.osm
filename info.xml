@@ -17,9 +17,9 @@
     <ver>4.6</ver>
   </compatibility>
   <urls>
-    <url desc="Main Extension Page">FIXME</url>
-    <url desc="Documentation">FIXME</url>
-    <url desc="Support">FIXME</url>
+    <url desc="Main Extension Page">https://github.com/systopia/de.systopia.osm</url>
+    <url desc="Documentation">https://github.com/systopia/de.systopia.osm</url>
+    <url desc="Support">https://github.com/systopia/de.systopia.osm/issues</url>
   </urls>
   <comments></comments>
   <civix>
