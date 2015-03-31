@@ -128,13 +128,21 @@ class CRM_Utils_Geocode_OpenStreetMapsCoding {
     }
 
     require_once 'HTTP/Request.php';
+    CRM_Core_Error::ignoreException();
     $request = new HTTP_Request($url);
-    // TODO:
-    // If sendRequest fails a Network-Error-Message pops up and changes to the address
-    // won't be saved.
-    // We tried to do an Exception-catch around sendRequest but for any strange reasons
-    // it didn't helped.
-    $request->sendRequest();
+    $result = $request->sendRequest();
+
+    // check if request was successful
+    if (PEAR::isError($result)) {
+      CRM_Core_Error::debug_log_message('Geocoding failed: ' . $result->getMessage());
+      return FALSE;
+    }
+    if ($request->getResponseCode() != 200) {
+      CRM_Core_Error::debug_log_message('Geocoding failed, invalud response code ' . $request->getResponseCode());
+      return FALSE; 
+    }
+
+    // process results
     $string = $request->getResponseBody();
     $json = json_decode($string);
 
