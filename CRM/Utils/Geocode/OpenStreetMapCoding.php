@@ -135,7 +135,6 @@ class CRM_Utils_Geocode_OpenStreetMapCoding {
     }
 
     require_once 'HTTP/Request.php';
-    CRM_Core_Error::ignoreException();
     $request = new HTTP_Request($url);
     $result = $request->sendRequest();
 
@@ -145,7 +144,7 @@ class CRM_Utils_Geocode_OpenStreetMapCoding {
       return FALSE;
     }
     if ($request->getResponseCode() != 200) {
-      CRM_Core_Error::debug_log_message('Geocoding failed, invalud response code ' . $request->getResponseCode());
+      CRM_Core_Error::debug_log_message('Geocoding failed, invalid response code ' . $request->getResponseCode());
       return FALSE; 
     }
 
