@@ -1,4 +1,4 @@
-Kurze Beschreibung der OSM-Extension:
+#Kurze Beschreibung der SYSTOPIA OSM-Extension:
 
 Die OSM-Extension erweitert die in CiviCRM nativen Geocoding-Optionen.
 Nativ können Koordinaten für Adressen von Yahoo oder Google abgerufen werden.
@@ -13,16 +13,16 @@ Die Funktionsweise entspricht den nativen Geo-Coding-Optionen:
     noch fehlenden Daten anstößt.
 
 Allgemeine Anwendung:
-1.  OSM-Extension installieren und aktivieren.
-2.  Unter "Administer"->"System Settings"->"Mapping and Geocoding"
+ 1.  OSM-Extension installieren und aktivieren.
+ 2.  Unter "Administer"->"System Settings"->"Mapping and Geocoding"
     für "Geocoding Provider" "OpenStreetMapsCoding" auswählen.
-3.  a)  Beim Anlegen oder Verändern von Adress-Daten werden die Koordinaten
+   1.  Beim Anlegen oder Verändern von Adress-Daten werden die Koordinaten
         ermittelt und gespeichert.
-    b)  Unter "Administer"->"System Settings"->"Scheduled Jobs"
+   2.  Unter "Administer"->"System Settings"->"Scheduled Jobs"
         "Geocode and Parse Addresses" konfigurieren und aktivieren.
         Dieser Job ermittelt für alle Adressen die Koordinaten, sofern sie noch
         nicht existieren.
-4.  Möchte man generell vermeiden, dass bereits gesetzte Koordinaten vom
+ 4.  Möchte man generell vermeiden, dass bereits gesetzte Koordinaten vom
     Geocoding überschrieben werden, so kann für die Koordinaten die Option
     "Override automatic geocoding" aktiviert werden.
 
@@ -30,21 +30,22 @@ Umgang mit der API:
 Fehlerhafte Adress-Daten werden nicht bereinigt. Der Api-Call wird mit den
 Daten generiert, die in der Datenbank vorgefunden werden.
 Fünf Fälle werden unterschieden:
-1.  Adresse ist unvollständig:
+ 1.  Adresse ist unvollständig:
     Es fehlen Angaben für das Land, die Stadt oder die Straße.
     Um die Stadt zu identifizieren reicht in der Regel entweder der Name oder
     die Postleitzahl.
-2.  Die Antwort der API kann nicht verarbeitet werden.
-3.  Die Adresse kann vom Server nicht identifiziert werden.
-4.  Die Adresse kann vom Server nicht eindeuting aufgelöst werden.
+ 2.  Die Antwort der API kann nicht verarbeitet werden.
+ 3.  Die Adresse kann vom Server nicht identifiziert werden.
+ 4.  Die Adresse kann vom Server nicht eindeuting aufgelöst werden.
     Es werden Daten für mehrere Orte zurückgegeben.
-5.  Die Adresse kann eindeutig aufgelöst werden.
+ 5.  Die Adresse kann eindeutig aufgelöst werden.
+
 Die OSM-Extension verhält sich wie folgt:
-1.  Die Koordinaten in CiviCRM werden auf NULL gesetzt.
-2.  Die Koordinaten in CiviCRM bleiben unangetastet.
-3.  Die Koordinaten in CiviCRM werden auf NULL gesetzt.
-4.  Es werden die Koordinaten des ersten zurückgegebenen Ortes verwendet.
-5.  Die Koordinaten des zurückgegebenen Ortes werden gespeichert.
+ 1.  Die Koordinaten in CiviCRM werden auf NULL gesetzt.
+ 2.  Die Koordinaten in CiviCRM bleiben unangetastet.
+ 3.  Die Koordinaten in CiviCRM werden auf NULL gesetzt.
+ 4.  Es werden die Koordinaten des ersten zurückgegebenen Ortes verwendet.
+ 5.  Die Koordinaten des zurückgegebenen Ortes werden gespeichert.
 
 Bekannte Probleme und Fehler:
 Bei unsauberen Datenstand können viele Adressen nicht aufgelöst werden.
