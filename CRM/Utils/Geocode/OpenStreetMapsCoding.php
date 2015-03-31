@@ -3,7 +3,7 @@
   +--------------------------------------------------------------------+
   | CiviCRM OSM Geocoding module (SYS-OSM)                             |
   +--------------------------------------------------------------------+
-  | Copyright SYSTOPIA (c) 2014                                        |
+  | Copyright SYSTOPIA (c) 2014-2015                                   |
   +--------------------------------------------------------------------+
   | This is free software; you can copy, modify, and distribute it     |
   | under the terms of the GNU Affero General Public License           |
@@ -26,7 +26,7 @@
 /**
  *
  * @package CRM
- * @copyright SYSTOPIA (c) 2014
+ * @copyright SYSTOPIA (c) 2014-2015
  *
  */
 
@@ -37,6 +37,8 @@ class CRM_Utils_Geocode_OpenStreetMapsCoding {
 
   /**
    * server to retrieve the lat/long
+   * 
+   * The Nominatim service team 
    *
    * @var string
    * @static
@@ -69,7 +71,7 @@ class CRM_Utils_Geocode_OpenStreetMapsCoding {
 
     $params = array();
 
-    //TODO: is there a more failsafe format for street and street-number?
+    // TODO: is there a more failsafe format for street and street-number?
     if (CRM_Utils_Array::value('street_address', $values)) {
       $params['street'] = $values['street_address'];
     }
@@ -95,7 +97,7 @@ class CRM_Utils_Geocode_OpenStreetMapsCoding {
         }
       }
 
-      // dont add state twice if replicated in city (happens in NZ and other countries, CRM-2632)
+      // TODO: do we need this? This originated from CRM-2632 / Google geocoder
       if ($stateProvince != $city) {
         $params['state'] = $stateProvince;
       }
@@ -113,7 +115,7 @@ class CRM_Utils_Geocode_OpenStreetMapsCoding {
     if (!(array_key_exists('street', $params)
         && array_key_exists('country', $params)
         && (array_key_exists('city', $params) || array_key_exists('postalcode', $params)))) {
-      CRM_Core_Error::debug_log_message('Geocoding failed. Address is not complete.');
+      CRM_Core_Error::debug_log_message('Geocoding failed. Address data is incomplete.');
       $values['geo_code_1'] = $values['geo_code_2'] = 'null';
       return FALSE;
     }
@@ -137,7 +139,7 @@ class CRM_Utils_Geocode_OpenStreetMapsCoding {
     $json = json_decode($string);
 
     if (is_null($json)) {
-      // $string could not be encoded; maybe the service is down...
+      // $string could not be decoded; maybe the service is down...
       CRM_Core_Error::debug_log_message('Geocoding failed. "' . $string . '" is no valid json-code. (' . $url . ')');
       return FALSE;
 
