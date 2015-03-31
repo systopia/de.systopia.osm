@@ -119,7 +119,7 @@ class CRM_Utils_Geocode_OpenStreetMapsCoding {
     }
 
     $params['addressdetails'] = '1';
-    $url = "http://" . self::$_server . self::$_uri;
+    $url = "https://" . self::$_server . self::$_uri;
     $url .= '?format=json';
     foreach ($params as $key => $value) {
       $url .= '&' . urlencode($key) . '=' . urlencode($value);
