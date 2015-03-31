@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <extension key="de.systopia.osm" type="module">
   <file>osm</file>
-  <name>OpenStreetMaps Geocoding</name>
-  <description>OpenStreetMaps Geocoding provider</description>
+  <name>OpenStreetMap Geocoding</name>
+  <description>OpenStreetMap Geocoding provider</description>
   <license>AGPLv3</license>
   <maintainer>
     <author>SYSTOPIA</author>

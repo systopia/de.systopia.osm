@@ -2,7 +2,7 @@
 
 Die OSM-Extension erweitert die in CiviCRM nativen Geocoding-Optionen.
 Nativ können Koordinaten für Adressen von Yahoo oder Google abgerufen werden.
-Mit der OSM-Extension können Koordinaten auch von Open-Street-Maps bezogen werden.
+Mit der OSM-Extension können Koordinaten auch von Open-Street-Map bezogen werden.
 
 Allgemeine Funktionsweise:
 Die Funktionsweise entspricht den nativen Geo-Coding-Optionen:
@@ -15,7 +15,7 @@ Die Funktionsweise entspricht den nativen Geo-Coding-Optionen:
 Allgemeine Anwendung:
  1.  OSM-Extension installieren und aktivieren.
  2.  Unter "Administer"->"System Settings"->"Mapping and Geocoding"
-    für "Geocoding Provider" "OpenStreetMapsCoding" auswählen.
+    für "Geocoding Provider" "OpenStreetMapCoding" auswählen.
    1.  Beim Anlegen oder Verändern von Adress-Daten werden die Koordinaten
         ermittelt und gespeichert.
    2.  Unter "Administer"->"System Settings"->"Scheduled Jobs"
@@ -57,6 +57,6 @@ Verbesserungsmöglichkeiten:
 *   Adress-Daten anhand der Rückgabe-Werte des Servers vervollständigen.
 
 Links:
-*   Open-Street-Maps-Project:   http://www.openstreetmap.org
-*   Open-Street-Maps-Server:    http://nominatim.openstreetmap.org/
-*   Beschreibung der API:       http://wiki.openstreetmap.org/wiki/API_v0.6
+*   Open-Street-Map-Project:   http://www.openstreetmap.org
+*   Open-Street-Map-Server:    http://nominatim.openstreetmap.org/
+*   Beschreibung der API:      http://wiki.openstreetmap.org/wiki/API_v0.6

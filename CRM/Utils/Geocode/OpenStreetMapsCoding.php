@@ -31,7 +31,7 @@
  */
 
 /**
- * Class that uses OpenStreetMaps (OSM) API to retrieve the lat/long of an address
+ * Class that uses OpenStreetMap (OSM) API to retrieve the lat/long of an address
  *
  * This CiviCRM extension requests geodata from nominatim.osm.org, 
  * a service of OpenStreetMap Foundation. We have been advised that OSM servers 
@@ -42,7 +42,7 @@
  * "Geocode and Parse Adresses" cronjob if processing data sets containing more 
  * than 10.000 addresses.
  */
-class CRM_Utils_Geocode_OpenStreetMapsCoding {
+class CRM_Utils_Geocode_OpenStreetMapCoding {
 
   /**
    * OSM Nominatim server
