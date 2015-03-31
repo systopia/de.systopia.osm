@@ -146,7 +146,7 @@ class CRM_Utils_Geocode_OpenStreetMapsCoding {
     $string = $request->getResponseBody();
     $json = json_decode($string);
 
-    if (is_null($json)) {
+    if (is_null($json) || !is_array($json)) {
       // $string could not be decoded; maybe the service is down...
       CRM_Core_Error::debug_log_message('Geocoding failed. "' . $string . '" is no valid json-code. (' . $url . ')');
       return FALSE;
@@ -165,6 +165,7 @@ class CRM_Utils_Geocode_OpenStreetMapsCoding {
 
     } else {
       // don't know what went wrong... we got an array, but without lat and lon.
+      CRM_Core_Error::debug_log_message('Geocoding failed. Response was positive, but no coordinates were delivered.');
       return FALSE;
     }
   }
