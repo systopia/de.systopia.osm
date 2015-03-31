@@ -32,13 +32,20 @@
 
 /**
  * Class that uses OpenStreetMaps (OSM) API to retrieve the lat/long of an address
+ *
+ * This CiviCRM extension requests geodata from nominatim.osm.org, 
+ * a service of OpenStreetMap Foundation. We have been advised that OSM servers 
+ * might not be suitable for massive data requests, but so far could not 
+ * get precise information on what this exactly means. Also, we don't know what 
+ * the consequences of requests too massive for the OSM infrastructure might be. 
+ * Therefore we recommend that you consider using the 'throtte' option for the 
+ * "Geocode and Parse Adresses" cronjob if processing data sets containing more 
+ * than 10.000 addresses.
  */
 class CRM_Utils_Geocode_OpenStreetMapsCoding {
 
   /**
-   * server to retrieve the lat/long
-   * 
-   * The Nominatim service team 
+   * OSM Nominatim server
    *
    * @var string
    * @static
