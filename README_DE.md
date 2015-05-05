@@ -51,6 +51,10 @@ Bekannte Probleme und Fehler:
 Bei unsauberen Datenstand können viele Adressen nicht aufgelöst werden.
 Darüber hinaus sind keine Fehler bekannt.
 
+Vorsicht ist bei der Aktivierung des geplanten Jobs "Geocode and Parse Addresses". Dort werden alle noch nicht aufgelösten Adressen zum geokodieren geschickt. Das beinhaltet aber leider auch diejenigen Adressen, die beim letzten Mal fehlgeschlagen sind - was dazu führt, das diese fehlerhaften Adressen immer und immer wieder angefragt werden.
+
+In der Regel ist dieser aber gar nicht notwendig; neu eingetragene Adressen und Adressänderungen werden automatisch neu aufgelöst. Daher reicht es meist, den Job "Geocode and Parse Addresses" nach Installation einmal manuell auszuführen und nicht als geplanten Job zu aktivieren.
+
 Verbesserungsmöglichkeiten:
 *   Aufbereitung der Adress-Daten vor jedem API-Call um eine höhere Erfolgs-
     Quote zu erlangen.

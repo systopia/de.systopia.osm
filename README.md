@@ -6,6 +6,10 @@ Disclaimer: This CiviCRM extension requests geodata from nominatim.osm.org, a se
 
 Find the [German README here](https://github.com/systopia/de.systopia.osm/blob/master/README_DE.md).
 
+Remark: Be careful when activating the "Geocode and Parse Addresses" scheduled job. It will try to look up all addresses that have not been geocoded yet. That, however, includes all the addresses that couldn't be successfully completed the last time - causing the same failed addresses to be queried again and again.
+
+For most scenarios it should be sufficient to run the job once, since newly entered addresses and address changes should be automatically geocoded.
+
 Links:
 *   Open-Street-Map-Project:    http://www.openstreetmap.org
 *   Open-Street-Map-Server:     http://nominatim.openstreetmap.org/
