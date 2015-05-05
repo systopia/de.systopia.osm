@@ -55,6 +55,8 @@ Vorsicht ist bei der Aktivierung des geplanten Jobs "Geocode and Parse Addresses
 
 In der Regel ist dieser aber gar nicht notwendig; neu eingetragene Adressen und Adressänderungen werden automatisch neu aufgelöst. Daher reicht es meist, den Job "Geocode and Parse Addresses" nach Installation einmal manuell auszuführen und nicht als geplanten Job zu aktivieren.
 
+Bei großen Datensets kann das manuelle Auslösen einen Tiemout verursachen - in diesen Fällen empfehlen wir, den Cronjob zu aktivieren und nach einem erfolgreichen Abschluss wieder zu deaktivieren.
+
 Verbesserungsmöglichkeiten:
 *   Aufbereitung der Adress-Daten vor jedem API-Call um eine höhere Erfolgs-
     Quote zu erlangen.
