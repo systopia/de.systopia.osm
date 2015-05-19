@@ -122,7 +122,8 @@ class CRM_Utils_Geocode_OpenStreetMapCoding {
     if (!(array_key_exists('street', $params)
         && array_key_exists('country', $params)
         && (array_key_exists('city', $params) || array_key_exists('postalcode', $params)))) {
-      CRM_Core_Error::debug_log_message('Geocoding failed. Address data is incomplete.');
+      # Uncomment this because of too many log-messages
+      #CRM_Core_Error::debug_log_message('Geocoding failed. Address data is incomplete.');
       $values['geo_code_1'] = $values['geo_code_2'] = 'null';
       return FALSE;
     }
