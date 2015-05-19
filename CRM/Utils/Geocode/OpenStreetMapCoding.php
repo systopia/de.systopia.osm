@@ -145,6 +145,7 @@ class CRM_Utils_Geocode_OpenStreetMapCoding {
     }
     if ($request->getResponseCode() != 200) {
       CRM_Core_Error::debug_log_message('Geocoding failed, invalid response code ' . $request->getResponseCode());
+      $values['geo_code_error'] = $request->getResponseCode());
       return FALSE; 
     }
 
