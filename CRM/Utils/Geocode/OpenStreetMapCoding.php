@@ -122,8 +122,8 @@ class CRM_Utils_Geocode_OpenStreetMapCoding {
     if (!(array_key_exists('street', $params)
         && array_key_exists('country', $params)
         && (array_key_exists('city', $params) || array_key_exists('postalcode', $params)))) {
-      # Uncomment this because of too many log-messages
-      #CRM_Core_Error::debug_log_message('Geocoding failed. Address data is incomplete.');
+      // the error logging is disabled, because it potentially produces a lot of log messages
+      //CRM_Core_Error::debug_log_message('Geocoding failed. Address data is incomplete.');
       $values['geo_code_1'] = $values['geo_code_2'] = 'null';
       return FALSE;
     }
@@ -146,7 +146,12 @@ class CRM_Utils_Geocode_OpenStreetMapCoding {
     }
     if ($request->getResponseCode() != 200) {
       CRM_Core_Error::debug_log_message('Geocoding failed, invalid response code ' . $request->getResponseCode());
-      $values['geo_code_error'] = $request->getResponseCode());
+      if ($request->getResponseCode() == 429) {
+        // provider says 'TOO MANY REQUESTS'
+        $values['geo_code_error'] = 'OVER_QUERY_LIMIT';
+      } else {
+        $values['geo_code_error'] = $request->getResponseCode();
+      }
       return FALSE; 
     }
 
@@ -161,7 +166,8 @@ class CRM_Utils_Geocode_OpenStreetMapCoding {
 
     } elseif (count($json) == 0) {
       // array is empty; address is probably invalid...
-      CRM_Core_Error::debug_log_message('Geocoding failed.  No results for: ' . $url);
+      // the error logging is disabled, because it potentially reveals address data to the log
+      // CRM_Core_Error::debug_log_message('Geocoding failed.  No results for: ' . $url);
       $values['geo_code_1'] = $values['geo_code_2'] = 'null';
       return FALSE;
 
