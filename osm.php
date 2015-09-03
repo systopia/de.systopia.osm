@@ -91,3 +91,14 @@ function osm_civicrm_upgrade($op, CRM_Queue_Queue $queue = NULL) {
 function osm_civicrm_managed(&$entities) {
   return _osm_civix_civicrm_managed($entities);
 }
+
+/**
+ * Implementation of hook_civicrm_buildForm
+ */
+function osm_civicrm_buildForm($formName, &$form) {
+  if ($formName == 'CRM_Contact_Form_Contact') {
+    CRM_Core_Region::instance('form-bottom')->add(array(
+    'template' => 'CRM/Osm/Form/Contact.tpl',
+    ));
+  }
+}
