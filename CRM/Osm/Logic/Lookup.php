@@ -176,4 +176,111 @@ class CRM_Osm_Logic_Lookup {
       return TRUE;
     }
   }
+
+
+/**
+  * This function will try to normalise the given address
+  *
+  * @param street_address   address street and number 
+  * @param postal_code      address postal code
+  * @param city             address postal city
+  * @param country_id       address country ID (default is CiviCRM default country)
+  * 
+  * @return the params above if they could be normalised.
+  *         also, the key 'query' return the original values
+  *         '_street_address_not_normalised' is set to '1' if the street couldn't be parsed and processed
+  *         'is_error', 'error_code', 'error_msg' is set upon an error
+  *         error_code  is    0 => no error
+  *                           1 => bad domain (currently this only works for Germany)
+  *                           2 => query limit exceeded
+  *                           3 => other nominatim error
+  */
+  public static function normalise($query) {
+    $query_params      = array('street_address', 'postal_code', 'city', 'country_id');
+    $osm_parameter_map = array('road' => 'street_address', 'postcode' => 'postal_code', 'city' => 'city', 'house_number' => 'house_number');
+    $countryIsoCodes = CRM_Core_PseudoConstant::countryIsoCode();
+    $street_number   = '';
+
+    // build result structure
+    $result = array('query' => array());
+    foreach ($query_params as $query_param) {
+      if (isset($query[$query_param])) {
+        $result['query'][$query_param] = $query[$query_param];
+      }
+    }
+
+    $config = CRM_Core_Config::singleton();
+    if (empty($query['country_id'])) {
+      $result['country_id'] = $config->defaultContactCountry;
+    }
+
+    // currently, we only support German addresses
+    if ('DE' != CRM_Utils_Array::value($result['country_id'], $countryIsoCodes)) {
+      $result['is_error']   = 1;
+      $result['error_code'] = 1;
+      $result['error_msg']  = ts("Address formatting currently only works for Germany.");
+      return $result;
+    } else {
+      $query['country'] = 'Germany';
+    }
+
+    // parse street_address
+    if (!empty($query['street_address'])) {
+      $match = array();
+      if (preg_match("#(?P<street_name>.*)\s(?P<street_number>[0-9]+[a-zA-Z]?)\s*$#", $query['street_address'], $match)) {
+        $street_number = $match['street_number'];
+      }
+    }
+
+    // query OSM server
+    self::format($query);
+    if (!empty($query['geo_code_error'])) {
+      $result['is_error']     = 1;
+      if ($query['geo_code_error'] == 'OVER_QUERY_LIMIT') {
+        $result['error_code'] = 2;
+        $result['error_msg']  = ts("Query limit exceeded");
+      } else {
+        $result['error_code'] = 3;
+        $result['error_msg']  = ts("Cannot query server.");        
+      }
+      return $result;
+    }
+
+    // loop through the items
+    foreach ($query['result'] as $entry) {
+      foreach ($osm_parameter_map as $osm_key => $civi_key) {
+        if (!empty($entry->address->$osm_key)) {
+          // this is returned.
+          if (isset($result[$civi_key])) {
+            if ($result[$civi_key] != '' && $result[$civi_key] != $entry->address->$osm_key) {
+              // CONFLICT! SET TO EMPTY, TO INDICATE THAT
+              $result[$civi_key] = '';
+            }
+          } else {
+            $result[$civi_key] = $entry->address->$osm_key;
+          }
+        }
+      }
+    }
+
+    // finally, post-process the street_address
+    if (empty($street_number)) {
+      // address couldn't be parsed
+      $result['street_address'] = $query['street_address'];
+      $result['_street_address_not_normalised'] = 1;
+    } else {
+      // address was parsed -> reassemble
+      if (!empty($result['house_number']) && !empty($result['street_address'])) {
+        $result['street_address'] .= ' ' . $result['house_number'];
+      } elseif (empty($result['house_number']) && !empty($result['street_address'])) {
+        $result['street_address'] .= ' ' . $street_number;
+      } else {
+        $result['street_address'] = $query['street_address'];
+        $result['_street_address_not_normalised'] = 1;
+      }
+    }
+    if (isset($result['house_number'])) unset($result['house_number']);
+
+    return $result;
+  }
 }
