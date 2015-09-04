@@ -55,8 +55,8 @@ CRM.$(function() {
       if(typeof address.city != "undefined") {
         CRM.$('#address_1_city').val(address.city);
       }
-      if(typeof address.postalcode != "undefined") {
-        CRM.$('#address_1_postal_code').val(address.postalcode);
+      if(typeof address.postal_code != "undefined") {
+        CRM.$('#address_1_postal_code').val(address.postal_code);
       }
       if(typeof address.country_id != "undefined") {
         CRM.$('#s2id_address_1_country_id').val(address.country_id).trigger("change");
