@@ -96,7 +96,8 @@ function osm_civicrm_managed(&$entities) {
  * Implementation of hook_civicrm_buildForm
  */
 function osm_civicrm_buildForm($formName, &$form) {
-  if ($formName == 'CRM_Contact_Form_Contact') {
+  if ($formName == 'CRM_Contact_Form_Contact' ||
+      $formName == 'CRM_Contact_Form_Inline_Address') {
     CRM_Core_Region::instance('form-bottom')->add(array(
     'template' => 'CRM/Osm/Form/Contact.tpl',
     ));
