@@ -211,11 +211,11 @@ class CRM_Osm_Logic_Lookup {
 
     $config = CRM_Core_Config::singleton();
     if (empty($query['country_id'])) {
-      $result['country_id'] = $config->defaultContactCountry;
+      $query['country_id'] = $config->defaultContactCountry;
     }
 
     // currently, we only support German addresses
-    if ('DE' != CRM_Utils_Array::value($result['country_id'], $countryIsoCodes)) {
+    if ('DE' != CRM_Utils_Array::value($query['country_id'], $countryIsoCodes)) {
       $result['is_error']   = 1;
       $result['error_code'] = 1;
       $result['error_msg']  = ts("Address formatting currently only works for Germany.");
