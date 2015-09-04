@@ -22,27 +22,22 @@
   | see the CiviCRM license FAQ at http://civicrm.org/licensing        |
   +--------------------------------------------------------------------+
 */
+/*
+* Settings metadata file
+*/
 
-/**
- *
- * @package CRM
- * @copyright SYSTOPIA (c) 2014-2015
- *
- */
-
- /**
-  * This API call will try to normalise the given address
-  *
-  * @return the params above if they could be normalised.
-  *         also, the key 'query' return the original values
-  *         '_street_address_not_normalised' is set to '1' if the street couldn't be parsed and processed
-  *         'is_error', 'error_code', 'error_msg' is set upon an error
-  *         error_code  is    0 => no error
-  *                           1 => bad domain (currently this only works for Germany)
-  *                           2 => query limit exceeded
-  *                           3 => other nominatim error
-  */
-function civicrm_api3_osm_lookup_normalise($params) {
-  return CRM_Osm_Logic_Lookup::normalise($params);
-}
-
+return array(
+  'enable_js_lookup' => array(
+    'group_name' => 'OSM Preferences',
+    'group' => 'de.systopia',
+    'name' => 'enable_js_lookup',
+    'type' => 'Integer',
+    'html_type' => 'Select',
+    'default' => 1,
+    'add' => '4.3',
+    'is_domain' => 1,
+    'is_contact' => 0,
+    'description' => 'Enables javascript street address lookup',
+    'help_text' => 'Enables javascript street address lookup',
+  )
+ );

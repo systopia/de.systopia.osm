@@ -213,3 +213,15 @@ function _osm_civix_insert_navigation_menu(&$menu, $path, $item, $parentId = NUL
     return $found;
   }
 }
+
+function _osm_civix_civicrm_alterSettingsFolders(&$metaDataFolders = NULL){
+  static $configured = FALSE;
+  if ($configured) return;
+  $configured = TRUE;
+
+  $extRoot = dirname( __FILE__ ) . DIRECTORY_SEPARATOR;
+  $extDir = $extRoot . 'settings';
+  if(!in_array($extDir, $metaDataFolders)){
+    $metaDataFolders[] = $extDir;
+  }
+}

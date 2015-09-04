@@ -98,8 +98,19 @@ function osm_civicrm_managed(&$entities) {
 function osm_civicrm_buildForm($formName, &$form) {
   if ($formName == 'CRM_Contact_Form_Contact' ||
       $formName == 'CRM_Contact_Form_Inline_Address') {
-    CRM_Core_Region::instance('form-bottom')->add(array(
-    'template' => 'CRM/Osm/Form/Contact.tpl',
-    ));
+
+    if(CRM_Osm_Logic_Settings::isEnabled()) {
+      CRM_Core_Region::instance('form-bottom')->add(array(
+      'template' => 'CRM/Osm/Form/Contact.tpl',
+      ));
+    }
+    
   }
+}
+
+/**
+* Implementation of hook_civicrm_config
+*/
+function osm_civicrm_alterSettingsFolders(&$metaDataFolders = NULL){
+  _osm_civix_civicrm_alterSettingsFolders($metaDataFolders);
 }

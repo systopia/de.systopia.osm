@@ -24,25 +24,10 @@
 */
 
 /**
- *
- * @package CRM
- * @copyright SYSTOPIA (c) 2014-2015
- *
+ * This class holds all settings and configuration methods
  */
-
- /**
-  * This API call will try to normalise the given address
-  *
-  * @return the params above if they could be normalised.
-  *         also, the key 'query' return the original values
-  *         '_street_address_not_normalised' is set to '1' if the street couldn't be parsed and processed
-  *         'is_error', 'error_code', 'error_msg' is set upon an error
-  *         error_code  is    0 => no error
-  *                           1 => bad domain (currently this only works for Germany)
-  *                           2 => query limit exceeded
-  *                           3 => other nominatim error
-  */
-function civicrm_api3_osm_lookup_normalise($params) {
-  return CRM_Osm_Logic_Lookup::normalise($params);
+class CRM_Osm_Logic_Settings {
+  static function isEnabled() {
+    return CRM_Core_BAO_Setting::getItem('OSM Preferences', 'enable_js_lookup');
+  }
 }
-
