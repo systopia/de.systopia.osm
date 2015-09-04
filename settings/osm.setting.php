@@ -33,7 +33,7 @@ return array(
     'name' => 'enable_js_lookup',
     'type' => 'Integer',
     'html_type' => 'Select',
-    'default' => 1,
+    'default' => 0,
     'add' => '4.3',
     'is_domain' => 1,
     'is_contact' => 0,
