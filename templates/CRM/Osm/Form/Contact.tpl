@@ -29,8 +29,8 @@ CRM.$(function() {
       var values = this.getFieldValues();
       if(values.street_address == "" ||
          values.country_id     == "" ||
-         values.city           == "" ||
-         values.postalcode     == "") {
+         (values.city           == "" &&
+         values.postalcode     == "")) {
            return false;
       }
       return true;
@@ -41,6 +41,8 @@ CRM.$(function() {
     this.callWhenReady = function() {
       if(this.isReadyForLookUp()) {
         this.query(this.getFieldValues());
+      }else{
+        this.setStatus("none");
       }
     }
     /**
