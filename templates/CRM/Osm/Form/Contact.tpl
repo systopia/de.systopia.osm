@@ -112,7 +112,7 @@ CRM.$(function() {
 
        switch (status) {
          case "unknown":
-          elem.append(html_unknown);
+          elem.append(html_alert);
           break;
          case "success":
           elem.append(html_check);
