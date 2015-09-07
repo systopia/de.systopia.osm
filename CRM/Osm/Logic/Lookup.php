@@ -263,7 +263,17 @@ class CRM_Osm_Logic_Lookup {
       }
     }
 
-    // finally, post-process the street_address
+    // POST-PROCESSING
+    
+    // POSTAL CODE
+    if (!empty($result['postal_code'])) {
+      if (!preg_match("#^[0-9]{5}$#", $query['postal_code'])) {
+        // only accept German (5 digit) postal codes
+        $query['postal_code'] = '';
+      }
+    }
+
+    // STREET_ADDRESS
     if (empty($street_number)) {
       // address couldn't be parsed
       $result['street_address'] = $query['street_address'];
