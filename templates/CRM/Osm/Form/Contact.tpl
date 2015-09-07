@@ -18,7 +18,7 @@ CRM.$(function() {
         street_address: CRM.$('#address_1_street_address').val(),
         country_id: CRM.$('#s2id_address_1_country_id').select2('data').id,
         city: CRM.$('#address_1_city').val(),
-        postalcode: CRM.$('#address_1_postal_code').val()
+        postal_code: CRM.$('#address_1_postal_code').val()
       };
       return address;
     }
@@ -39,15 +39,32 @@ CRM.$(function() {
      * Calls the lookup method when all required fields have been set
      */
     this.callWhenReady = function(event) {
-      CRM.$(event.currentTarget).css({"border-color":"",
-                                      "border-width":"",
-                                      "border-style":""});
+      CRM.$(event.currentTarget).css({"border-radius":"",
+                                      "border":""});
       if(this.isReadyForLookUp()) {
         this.query(this.getFieldValues());
       }else{
         this.setStatus("none");
       }
     }
+    /**
+     * Highlight a specified DOM element
+     */
+    this.highlightElement = function(target, style) {
+      var color;
+      switch(style) {
+        case "ok":
+          color = "#00FF00";
+          break;
+        case "warning":
+          color = "#FF023E";
+          break;
+        case "error":
+        default:
+          color = "#FF0000";
+      }
+      target.css({"border-radius": "3px", "border": "2px solid " + color});
+    };
     /**
      * Set a field value if it does not already contain a value.
      * If already set, highlight the field.
@@ -56,10 +73,7 @@ CRM.$(function() {
       var field = CRM.$(selector);
       var val = field.val();
       if(val && !override) {
-        // highlight
-        field.css({"border-color": "#ff0000",
-                   "border-width":"1px",
-                   "border-style":"solid"});
+        this.highlightElement(field, "warning");
       }else{
         field.val(value);
       }
