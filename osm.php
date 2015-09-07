@@ -100,11 +100,28 @@ function osm_civicrm_buildForm($formName, &$form) {
       $formName == 'CRM_Contact_Form_Inline_Address') {
 
     if(CRM_Osm_Logic_Settings::isEnabled()) {
-      CRM_Core_Region::instance('form-bottom')->add(array(
+      $smarty = CRM_Core_Smarty::singleton();
+      $smarty->assign('CRM_VERSION_LT_44', version_compare(CRM_Utils_System::version(), '4.5', '<') ? "true" : "false");
+      $region = version_compare(CRM_Utils_System::version(), '4.5', '<') ? "page-body" : "form-bottom";
+      
+      CRM_Core_Region::instance($region)->add(array(
       'template' => 'CRM/Osm/Form/Contact.tpl',
       ));
     }
     
+  }
+}
+
+function osm_civicrm_alterContent( &$content, $context, $tplName, &$object ) {
+  if (version_compare(CRM_Utils_System::version(), '4.5', '<')) {
+    if($context == "form") {
+      if($tplName == "CRM/Contact/Form/Inline/Address.tpl") {
+        $smarty = CRM_Core_Smarty::singleton();
+        $smarty->assign('CRM_VERSION_LT_44', version_compare(CRM_Utils_System::version(), '4.5', '<') ? "true" : "false");
+        $html = $smarty->fetch(__DIR__ . '/templates/CRM/Osm/Form/Contact.tpl');
+        $content .= $html;
+      }
+    }
   }
 }
 

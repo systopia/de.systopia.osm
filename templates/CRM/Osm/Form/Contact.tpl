@@ -1,5 +1,21 @@
+{if $CRM_VERSION_LT_44}
+  {literal}
+  <style>
+    .osm_status_icon {
+      display: inline-block;
+    }
+  </style>
+  {/literal}
+{/if}
+
 <script type="text/javascript">
+var LESS_THAN_44 = {$CRM_VERSION_LT_44};
 {literal}
+//4.4 workaround
+if (LESS_THAN_44) {
+  CRM.$ = window.cj;
+}
+
 CRM.$(function() {
 
   function osm() {
@@ -9,6 +25,9 @@ CRM.$(function() {
      */
     this.test = function() {
       console.log("de.systopia.osm: enabled");
+      if(LESS_THAN_44) {
+        console.log("including 4.4.x compatibility changes");
+      }
     }
     /**
      * Returns all needed field values as an object
@@ -16,7 +35,7 @@ CRM.$(function() {
     this.getFieldValues = function() {
       var address = {
         street_address: CRM.$('#address_1_street_address').val(),
-        country_id: CRM.$('#s2id_address_1_country_id').select2('data').id,
+        country_id: (LESS_THAN_44) ? CRM.$('#address_1_country_id').val() : CRM.$('#s2id_address_1_country_id').select2('data').id,
         city: CRM.$('#address_1_city').val(),
         postal_code: CRM.$('#address_1_postal_code').val()
       };
@@ -29,7 +48,7 @@ CRM.$(function() {
       var values = this.getFieldValues();
       if(values.street_address == "" ||
          values.country_id     == "" ||
-         (values.city           == "" &&
+         (values.city          == "" &&
          values.postalcode     == "")) {
            return false;
       }
