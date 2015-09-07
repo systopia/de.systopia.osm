@@ -251,12 +251,12 @@ class CRM_Osm_Logic_Lookup {
     }
 
     // POST-PROCESSING
-    
+
     // POSTAL CODE
     if (!empty($result['postal_code'])) {
-      if (!preg_match("#^[0-9]{5}$#", $query['postal_code'])) {
+      if (!preg_match("#^[0-9]{5}$#", $result['postal_code'])) {
         // only accept German (5 digit) postal codes
-        $query['postal_code'] = '';
+        $result['postal_code'] = '';
       }
     }
 
