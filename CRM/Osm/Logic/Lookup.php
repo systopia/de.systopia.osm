@@ -215,6 +215,7 @@ class CRM_Osm_Logic_Lookup {
       $match = array();
       if (preg_match("#(?P<street_name>.*)\s(?P<street_number>[0-9]+[a-zA-Z]?)\s*$#", $query['street_address'], $match)) {
         $street_number = $match['street_number'];
+        $query['street_address'] = $match['street_number'] . ' ' . $match['street_name'];
       }
     }
 
@@ -271,7 +272,7 @@ class CRM_Osm_Logic_Lookup {
       } elseif (empty($result['house_number']) && !empty($result['street_address'])) {
         $result['street_address'] .= ' ' . $street_number;
       } else {
-        $result['street_address'] = $query['street_address'];
+        $result['street_address'] = $result['query']['street_address'];
         $result['_street_address_not_normalised'] = 1;
       }
     }
