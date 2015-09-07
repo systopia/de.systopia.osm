@@ -1,4 +1,4 @@
-{if $CRM_VERSION_LT_44}
+{if $CRM_VERSION_LT_44 eq "true"}
   {literal}
   <style>
     .osm_status_icon {
@@ -26,7 +26,7 @@ CRM.$(function() {
     this.test = function() {
       console.log("de.systopia.osm: enabled");
       if(LESS_THAN_44) {
-        console.log("including 4.4.x compatibility changes");
+        console.log("- including 4.4.x compatibility changes");
       }
     }
     /**

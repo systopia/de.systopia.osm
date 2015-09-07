@@ -113,7 +113,8 @@ function osm_civicrm_buildForm($formName, &$form) {
 }
 
 function osm_civicrm_alterContent( &$content, $context, $tplName, &$object ) {
-  if (version_compare(CRM_Utils_System::version(), '4.5', '<')) {
+  if (version_compare(CRM_Utils_System::version(), '4.5', '<') &&
+      CRM_Osm_Logic_Settings::isEnabled()) {
     if($context == "form") {
       if($tplName == "CRM/Contact/Form/Inline/Address.tpl") {
         $smarty = CRM_Core_Smarty::singleton();
