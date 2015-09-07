@@ -38,7 +38,10 @@ CRM.$(function() {
     /**
      * Calls the lookup method when all required fields have been set
      */
-    this.callWhenReady = function() {
+    this.callWhenReady = function(event) {
+      CRM.$(event.currentTarget).css({"border-color":"",
+                                      "border-width":"",
+                                      "border-style":""});
       if(this.isReadyForLookUp()) {
         this.query(this.getFieldValues());
       }else{
@@ -46,17 +49,33 @@ CRM.$(function() {
       }
     }
     /**
+     * Set a field value if it does not already contain a value.
+     * If already set, highlight the field.
+     */
+    this.setValueIfEmpty = function(selector, value, override) {
+      var field = CRM.$(selector);
+      var val = field.val();
+      if(value == "" && val && !override) {
+        // highlight
+        field.css({"border-color": "#ff0000",
+                   "border-width":"1px",
+                   "border-style":"solid"});
+      }else{
+        field.val(value);
+      }
+    }
+    /**
      * Set address field values
      */
     this.setFieldValues = function(address) {
       if(typeof address.street_address != "undefined") {
-        CRM.$('#address_1_street_address').val(address.street_address);
+        this.setValueIfEmpty('#address_1_street_address', address.street_address, true);
       }
       if(typeof address.city != "undefined") {
-        CRM.$('#address_1_city').val(address.city);
+        this.setValueIfEmpty('#address_1_city', address.city);
       }
       if(typeof address.postal_code != "undefined") {
-        CRM.$('#address_1_postal_code').val(address.postal_code);
+        this.setValueIfEmpty('#address_1_postal_code', address.postal_code);
       }
       if(typeof address.country_id != "undefined") {
         CRM.$('#s2id_address_1_country_id').val(address.country_id).trigger("change");
