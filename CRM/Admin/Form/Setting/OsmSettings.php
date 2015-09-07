@@ -29,7 +29,7 @@ class CRM_Admin_Form_Setting_OsmSettings extends CRM_Admin_Form_Setting
 {
 
     public function buildQuickForm( ) {
-        CRM_Utils_System::setTitle(ts('de.systopia.osm - Settings'));
+        CRM_Utils_System::setTitle(ts('OpenStreetMap Settings'));
 
         if(CRM_Osm_Logic_Settings::isEnabled()){
           $checkbox_options = array('checked' => 'checked');
@@ -37,7 +37,7 @@ class CRM_Admin_Form_Setting_OsmSettings extends CRM_Admin_Form_Setting
           $checkbox_options = array();
         }
 
-        $this->addElement('checkbox', 'enable_js_lookup', ts("Enable Address Lookup"), "", $checkbox_options);
+        $this->addElement('checkbox', 'enable_js_lookup', ts("Enable Address Completion"), "", $checkbox_options);
 
         parent::buildQuickForm();
     }

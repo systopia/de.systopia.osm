@@ -3,7 +3,7 @@
   <item>
     <path>civicrm/admin/setting/osm</path>
     <page_callback>CRM_Admin_Form_Setting_OsmSettings</page_callback>
-    <title>de.systopia.osm settings</title>
+    <title>OpenStreetMap Settings</title>
     <desc>Configuration for the OSM module</desc>
     <access_arguments>administer CiviCRM</access_arguments>
     <adminGroup>System Settings</adminGroup>

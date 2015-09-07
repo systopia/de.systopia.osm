@@ -6,7 +6,7 @@
           <td>
             {$form.enable_js_lookup.html}
             <br>
-            <span class="description">{ts}Enable this value you want to enable street address lookup in contact edit forms{/ts} <a class="helpicon" onclick='CRM.help("{ts}Enable Lookup{/ts}", {literal}{"id":"id-enable-lookup","file":"CRM\/Admin\/Form\/Setting\/OsmSettings"}{/literal}); return false;' href="#" title="{ts}Help{/ts}" class="helpicon">&nbsp;</a></span>
+            <span class="description">{ts}Address lookup and autocomplete assistant{/ts} <a class="helpicon" onclick='CRM.help("{ts}Enable Lookup{/ts}", {literal}{"id":"id-enable-lookup","file":"CRM\/Admin\/Form\/Setting\/OsmSettings"}{/literal}); return false;' href="#" title="{ts}Help{/ts}" class="helpicon">&nbsp;</a></span>
           </td>
       </tr>
     </table>

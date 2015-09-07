@@ -1,3 +1,5 @@
 {htxt id='id-enable-lookup'}
-    <p>{ts}TODO{/ts}</p>
+  <p>{ts}The address form autocomplete assistant will look up addresses and fill or correct your street address or city as you type.{/ts}</p>
+  <p>{ts}Currently, only German addresses are supported.{/ts}</p>
+  <p>{ts}This system uses the OpenStreetMap Nominatim service.{/ts}</p>
 {/htxt}
