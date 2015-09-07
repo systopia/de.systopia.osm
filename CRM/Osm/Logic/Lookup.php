@@ -79,43 +79,29 @@ class CRM_Osm_Logic_Lookup {
     $params = array();
 
     // TODO: is there a more failsafe format for street and street-number?
-    if (CRM_Utils_Array::value('street_address', $values)) {
+    if (!empty($values['street_address'])) {
       $params['street'] = $values['street_address'];
     }
 
-    if ($city = CRM_Utils_Array::value('city', $values)) {
-      $params['city'] = $city;
+    if (!empty($values['city'])) {
+      $params['city'] = $values['city'];
     }
 
-    if (CRM_Utils_Array::value('state_province', $values)) {
-      if (CRM_Utils_Array::value('state_province_id', $values)) {
-        $stateProvince = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_StateProvince', $values['state_province_id']);
-      }
-      else {
-        if (!$stateName) {
-          $stateProvince = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_StateProvince',
-            $values['state_province'],
-            'name',
-            'abbreviation'
-          );
-        }
-        else {
-          $stateProvince = $values['state_province'];
-        }
-      }
-
-      // TODO: do we need this? This originated from CRM-2632 / Google geocoder
-      if ($stateProvince != $city) {
-        $params['state'] = $stateProvince;
-      }
-    }
-
-    if (CRM_Utils_Array::value('postal_code', $values)) {
+    if (!empty($values['postal_code'])) {
       $params['postalcode'] = $values['postal_code'];
     }
 
-    if (CRM_Utils_Array::value('country', $values)) {
+    if (!empty($values['country'])) {
       $params['country'] = $values['country'];
+    }
+
+    if (!empty($values['state_province'])) {
+      $params['state'] = $values['state_province'];
+    } else {
+      // province lookup
+      if (!empty($values['state_province_id'])) {
+        $params['state'] = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_StateProvince', $values['state_province_id']);
+      }
     }
 
     // There should be at least a city or postal_code, a street and a country
