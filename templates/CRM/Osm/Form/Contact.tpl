@@ -72,7 +72,7 @@ CRM.$(function() {
     this.setValueIfEmpty = function(selector, value, override) {
       var field = CRM.$(selector);
       var val = field.val();
-      if(val && !override) {
+      if(val && !override && value !== val) {
         this.highlightElement(field, "warning");
       }else{
         field.val(value);
@@ -86,7 +86,7 @@ CRM.$(function() {
         this.setValueIfEmpty('#address_1_street_address', address.street_address, true);
       }
       if(typeof address.city != "undefined") {
-        this.setValueIfEmpty('#address_1_city', address.city);
+        this.setValueIfEmpty('#address_1_city', address.city, true);
       }
       if(typeof address.postal_code != "undefined") {
         this.setValueIfEmpty('#address_1_postal_code', address.postal_code);
