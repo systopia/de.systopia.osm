@@ -55,7 +55,7 @@ CRM.$(function() {
     this.setValueIfEmpty = function(selector, value, override) {
       var field = CRM.$(selector);
       var val = field.val();
-      if(value == "" && val && !override) {
+      if(val && !override) {
         // highlight
         field.css({"border-color": "#ff0000",
                    "border-width":"1px",
@@ -88,7 +88,10 @@ CRM.$(function() {
        var elem = CRM.$('#address_1_street_address').parent();
        var html_check = CRM.$('<a class="ui-icon ui-icon-circle-check osm_status_icon"></a>');
        var html_unknown = CRM.$('<a class="ui-icon ui-icon-help osm_status_icon"></a>');
-       var html_inprogress = CRM.$('<a class="ui-icon ui-icon-clock osm_status_icon"></a>');
+       {/literal}
+       var icon_busy = "{$config->resourceBase}i/loading.gif";
+       {literal}
+       var html_inprogress = CRM.$('<a class="osm_status_icon"><img src="' + icon_busy + '"></img></a>');
        var html_alert = CRM.$('<a class="ui-icon ui-icon-alert osm_status_icon"></a>');
 
        CRM.$('.osm_status_icon').remove();
