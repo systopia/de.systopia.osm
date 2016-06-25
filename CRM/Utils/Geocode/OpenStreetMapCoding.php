@@ -172,9 +172,16 @@ class CRM_Utils_Geocode_OpenStreetMapCoding {
       return FALSE;
 
     } elseif (array_key_exists('lat', $json[0]) && array_key_exists('lon', $json[0])) {
-      // TODO: Process other relevant data to update address
-      $values['geo_code_1'] = $json[0]->lat;
-      $values['geo_code_2'] = $json[0]->lon;
+      $values['geo_code_1'] = number_format($json[0]->lat, 10);
+      $values['geo_code_2'] = number_format($json[0]->lon, 10);
+
+      // Add state if necessary and available
+      $state = isset($json[0]->address) ? $json[0]->address->state : "";
+      $hasState = isset($values['state_province_id']) && $values['state_province_id'] != "null";
+      if (isset($state) && !$hasState) {
+        $values['state_province_id'] = self::getStateId($state, $params["country_id"]);
+      }
+
       return TRUE;
 
     } else {
@@ -182,5 +189,28 @@ class CRM_Utils_Geocode_OpenStreetMapCoding {
       CRM_Core_Error::debug_log_message('Geocoding failed. Response was positive, but no coordinates were delivered.');
       return FALSE;
     }
+  }
+
+  /**
+   * Get the state id by state name and optional country id.
+   *
+   * @param string $stateName
+   * @param string $countryId
+   * @return string
+   */
+  static function getStateId($stateName, $countryId) {
+    $state_province = new CRM_Core_DAO_StateProvince();
+    $state_province->name = $stateName;
+
+    // Add country id if present
+    if (!empty($countryId)) {
+      $state_province->country_id = $countryId;
+    }
+
+    if (!$state_province->find(TRUE)) {
+      return 'null';
+    }
+
+    return $state_province->id;
   }
 }
