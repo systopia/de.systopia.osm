@@ -179,7 +179,7 @@ class CRM_Utils_Geocode_OpenStreetMapCoding {
       $state = isset($json[0]->address) ? $json[0]->address->state : "";
       $hasState = isset($values['state_province_id']) && $values['state_province_id'] != "null";
       if (isset($state) && !$hasState) {
-        $values['state_province_id'] = self::getStateId($state, $params["country_id"]);
+        $values['state_province_id'] = self::getStateId($state, isset($params["country_id"]) ? $params["country_id"] : "");
       }
 
       return TRUE;
