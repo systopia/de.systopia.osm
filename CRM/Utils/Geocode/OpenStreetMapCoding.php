@@ -173,8 +173,8 @@ class CRM_Utils_Geocode_OpenStreetMapCoding {
 
     } elseif (array_key_exists('lat', $json[0]) && array_key_exists('lon', $json[0])) {
       // TODO: Process other relevant data to update address
-      $values['geo_code_1'] = $json[0]->lat;
-      $values['geo_code_2'] = $json[0]->lon;
+      $values['geo_code_1'] = substr($json[0]->lat, 0, 12);
+      $values['geo_code_2'] = substr($json[0]->lon, 0, 12);
       return TRUE;
 
     } else {
