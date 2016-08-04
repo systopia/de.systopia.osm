@@ -135,9 +135,17 @@ class CRM_Utils_Geocode_OpenStreetMapCoding {
       $url .= '&' . urlencode($key) . '=' . urlencode($value);
     }
 
-    require_once 'HTTP/Request.php';
-    $request = new HTTP_Request($url);
-    $result = $request->sendRequest();
+    $result = $request = null;
+    try {
+      require_once 'HTTP/Request.php';
+      $request = new HTTP_Request($url);
+      $result = $request->sendRequest();
+    } catch(Exception $e) {
+      // this could happen if there is a connection error or the server shut you out
+      //  see: https://github.com/systopia/de.systopia.osm/issues/8
+      CRM_Core_Error::debug_log_message('Geocoding failed: ' . $e->getMessage());
+      return FALSE;
+    }
 
     // check if request was successful
     if (PEAR::isError($result)) {
