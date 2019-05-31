@@ -79,8 +79,10 @@ class CRM_Utils_Geocode_OpenStreetMapCoding {
     $params = array();
 
     // TODO: is there a more failsafe format for street and street-number?
+    // Ryver #HELP-284: Strip out all characters prior to a street number (for example the unit number or level)
+    // before passing to Open Street Map, as OSM has difficulty returning the correct results with this information.
     if (CRM_Utils_Array::value('street_address', $values)) {
-      $params['street'] = $values['street_address'];
+      $params['street'] = preg_replace("/^.*[^0-9]([0-9]+[^0-9]*)$/", "$1", $values['street_address']);
     }
 
     if ($city = CRM_Utils_Array::value('city', $values)) {
