@@ -135,36 +135,23 @@ class CRM_Utils_Geocode_OpenStreetMapCoding {
       $url .= '&' . urlencode($key) . '=' . urlencode($value);
     }
 
-    $result = $request = null;
-    try {
-      require_once 'HTTP/Request.php';
-      $request = new HTTP_Request($url);
-      $result = $request->sendRequest();
-    } catch(Exception $e) {
-      // this could happen if there is a connection error or the server shut you out
-      //  see: https://github.com/systopia/de.systopia.osm/issues/8
-      CRM_Core_Error::debug_log_message('Geocoding failed: ' . $e->getMessage());
-      return FALSE;
-    }
+    $client = new GuzzleHttp\Client();
+    $request = $client->request('GET', $url);
 
     // check if request was successful
-    if (PEAR::isError($result)) {
-      CRM_Core_Error::debug_log_message('Geocoding failed: ' . $result->getMessage());
-      return FALSE;
-    }
-    if ($request->getResponseCode() != 200) {
-      CRM_Core_Error::debug_log_message('Geocoding failed, invalid response code ' . $request->getResponseCode());
-      if ($request->getResponseCode() == 429) {
+    if ($request->getStatusCode() != 200) {
+      CRM_Core_Error::debug_log_message('Geocoding failed, invalid response code ' . $request->getStatusCode());
+      if ($request->getStatusCode() == 429) {
         // provider says 'TOO MANY REQUESTS'
         $values['geo_code_error'] = 'OVER_QUERY_LIMIT';
       } else {
-        $values['geo_code_error'] = $request->getResponseCode();
+        $values['geo_code_error'] = $request->getStatusCode();
       }
       return FALSE; 
     }
 
     // process results
-    $string = $request->getResponseBody();
+    $string = $request->getBody();
     $json = json_decode($string);
 
     if (is_null($json) || !is_array($json)) {
