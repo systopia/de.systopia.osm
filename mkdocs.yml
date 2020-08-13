@@ -1,0 +1,20 @@
+site_name: OpenStreetMap CiviCRM GeoCoder
+repo_url: https://github.com/systopia/de.systopia.osm
+theme: material
+
+pages:
+- Home: index.md
+- 'German README': german.md
+
+markdown_extensions:
+- attr_list
+- admonition
+- def_list
+- codehilite
+- toc:
+    permalink: true
+- pymdownx.superfences
+- pymdownx.inlinehilite
+- pymdownx.tilde
+- pymdownx.betterem
+- pymdownx.mark
