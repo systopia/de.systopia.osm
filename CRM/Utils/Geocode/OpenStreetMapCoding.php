@@ -135,45 +135,69 @@ class CRM_Utils_Geocode_OpenStreetMapCoding {
       $url .= '&' . urlencode($key) . '=' . urlencode($value);
     }
 
-    $client = new GuzzleHttp\Client();
-    $request = $client->request('GET', $url);
+    // Nominatim requires that we cache lookups, since they're donating this
+    // service for free.
+    $cache = CRM_Utils_Cache::create(['type' => ['SqlGroup'], 'name' => 'geocode_osm']);
+    $cacheKey = substr(sha1($url), 0, 12);
+    $json = $cache->get($cacheKey);
+    $foundInCache = !empty($json);
+    if (!$foundInCache) {
+      // No valid value found in cache.
 
-    // check if request was successful
-    if ($request->getStatusCode() != 200) {
-      CRM_Core_Error::debug_log_message('Geocoding failed, invalid response code ' . $request->getStatusCode());
-      if ($request->getStatusCode() == 429) {
-        // provider says 'TOO MANY REQUESTS'
-        $values['geo_code_error'] = 'OVER_QUERY_LIMIT';
-      } else {
-        $values['geo_code_error'] = $request->getStatusCode();
+      $client = new GuzzleHttp\Client();
+      // Nominatim's terms of use require us to submit a real user agent to
+      // identify ourselves.  Rate limiting may be done using this. We use the
+      // configured API key if set, otherwise we use a unique hash.  We use the
+      // unique has instead of the domain name since sending the addresses of
+      // everybody to do with the organisation along with an identifier for the
+      // organisation could be sensitive.
+      // @see https://operations.osmfoundation.org/policies/nominatim/
+      $appName = $config->geoAPIKey ?: substr(sha1(CRM_Core_BAO_Domain::getDomain()->name . CIVICRM_SITE_KEY), 0, 12);
+      $request = $client->request('GET', $url, ['headers' =>  ['User-Agent' => "CiviCRM instance ($appName)"]]);
+
+      // check if request was successful
+      if ($request->getStatusCode() != 200) {
+        CRM_Core_Error::debug_log_message('Geocoding failed, invalid response code ' . $request->getStatusCode());
+        if ($request->getStatusCode() == 429) {
+          // provider says 'TOO MANY REQUESTS'
+          $values['geo_code_error'] = 'OVER_QUERY_LIMIT';
+        } else {
+          $values['geo_code_error'] = $request->getStatusCode();
+        }
+        return FALSE;
       }
-      return FALSE; 
-    }
 
-    // process results
-    $string = $request->getBody();
-    $json = json_decode($string);
+      // Process results
+      $string = $request->getBody();
+      $json = json_decode($string);
+    }
 
     if (is_null($json) || !is_array($json)) {
       // $string could not be decoded; maybe the service is down...
+      // We don't save this in the cache.
       CRM_Core_Error::debug_log_message('Geocoding failed. "' . $string . '" is no valid json-code. (' . $url . ')');
       return FALSE;
 
     } elseif (count($json) == 0) {
-      // array is empty; address is probably invalid...
-      // the error logging is disabled, because it potentially reveals address data to the log
+      // Array is empty; address is probably invalid...
+      // Error logging is disabled, because it potentially reveals address data to the log
       // CRM_Core_Error::debug_log_message('Geocoding failed.  No results for: ' . $url);
       $values['geo_code_1'] = $values['geo_code_2'] = 'null';
+      // Save in cache so we don't keep repeating the same failed query.
+      $cache->set($cacheKey, $json);
       return FALSE;
 
     } elseif (array_key_exists('lat', $json[0]) && array_key_exists('lon', $json[0])) {
       // TODO: Process other relevant data to update address
       $values['geo_code_1'] = substr($json[0]->lat, 0, 12);
       $values['geo_code_2'] = substr($json[0]->lon, 0, 12);
+      // Save in cache.
+      $cache->set($cacheKey, $json);
       return TRUE;
 
     } else {
-      // don't know what went wrong... we got an array, but without lat and lon.
+      // Don't know what went wrong... we got an array, but without lat and lon.
+      // We don't save this in the cache.
       CRM_Core_Error::debug_log_message('Geocoding failed. Response was positive, but no coordinates were delivered.');
       return FALSE;
     }
