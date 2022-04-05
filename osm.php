@@ -91,3 +91,44 @@ function osm_civicrm_upgrade($op, CRM_Queue_Queue $queue = NULL) {
 function osm_civicrm_managed(&$entities) {
   return _osm_civix_civicrm_managed($entities);
 }
+
+/**
+ * Implementation of hook_civicrmPre
+ *
+ * Used to prevent new geo_code_1 & geo_code_2 values being written to the database
+ * when the address data being written is otherwise no different to the existing
+ * address
+ */
+function osm_civicrm_pre($op, $objectName, $id, &$params) {
+  if ($objectName === 'Address' && $op === 'edit' && !is_null($id)) {
+    $current_address = \Civi\Api4\Address::get(FALSE)
+      ->addWhere('id', '=', $id)
+      ->execute()
+      ->first();
+
+    \Civi::log()->debug('Existing addr: %s', ['%s' => json_encode($current_address)]);
+    \Civi::log()->debug('Updated addr: %s', ['%s' => json_encode($params)]);
+
+    $fields_to_check = [
+      'city',
+      'country_id',
+      'county_id',
+      'postal_code',
+      'state_province_id',
+      'street_address',
+      'supplemental_address_1',
+      'supplemental_address_2',
+      'supplemental_address_3',
+    ];
+
+    $skip_geocode = TRUE;
+    foreach ($fields_to_check as $field) {
+      $skip_geocode = ($current_address[$field] == $params[$field]);
+    }
+
+    if ($skip_geocode) {
+      unset($params['geo_code_1']);
+      unset($params['geo_code_2']);
+    }
+  }
+}
