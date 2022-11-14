@@ -150,12 +150,12 @@ class CRM_Utils_Geocode_OpenStreetMapCoding {
   }
 
   /**
-   * @param string $add
+   * @param string $url
    *   Url-encoded address
    * @return array
    * @throws \GuzzleHttp\Exception\GuzzleException
    */
-  private static function makeRequest($add): array {
+  private static function makeRequest($url): array {
     // Nominatim requires that we cache lookups, since they're donating this
     // service for free.
     $cache = CRM_Utils_Cache::create(['type' => ['SqlGroup'], 'name' => 'geocode_osm']);
