@@ -191,7 +191,7 @@ class CRM_Utils_Geocode_OpenStreetMapCoding {
 
       // Process results
       $string = $request->getBody();
-      $json = json_decode($string, TRUE);
+      $json = json_decode($string);
     }
 
     if (is_null($json) || !is_array($json)) {
