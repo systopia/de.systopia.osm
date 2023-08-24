@@ -1,6 +1,7 @@
 site_name: OpenStreetMap CiviCRM GeoCoder
 repo_url: https://github.com/systopia/de.systopia.osm
-theme: material
+theme:
+  name: material
 
 nav:
 - Home: index.md
