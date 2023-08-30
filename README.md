@@ -28,3 +28,6 @@ Links:
 * [Open-Street-Map-Project](http://www.openstreetmap.org)
 * [Open-Street-Map-Server](http://nominatim.openstreetmap.org)
 * [API specs](http://wiki.openstreetmap.org/wiki/API_v0.6)
+
+## Documentation
+- EN: https://docs.civicrm.org/osm/en/latest (automatic publishing)
