@@ -209,7 +209,7 @@ class CRM_Utils_Geocode_OpenStreetMapCoding {
       $cache->set($cacheKey, $json);
       return [];
     }
-    elseif (array_key_exists('lat', $json[0]) && array_key_exists('lon', $json[0])) {
+    elseif (is_array($json[0]) && array_key_exists('lat', $json[0]) && array_key_exists('lon', $json[0])) {
       // TODO: Process other relevant data to update address
       // Save in cache.
       $cache->set($cacheKey, $json);
