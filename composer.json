@@ -1,0 +1,12 @@
+{
+    "name": "civicrm/osm",
+    "description": "OpenStreetMap Geocoding provider",
+    "type": "civicrm-ext",
+    "license": "AGPL-3.0-only",
+    "authors": [
+        {
+            "name": "SYSTOPIA",
+            "email": "leichtfuss@systopia.de"
+        }
+    ]
+}
