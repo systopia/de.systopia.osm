@@ -3,7 +3,7 @@
   +--------------------------------------------------------------------+
   | CiviCRM OSM Geocoding module (SYS-OSM)                             |
   +--------------------------------------------------------------------+
-  | Copyright SYSTOPIA (c) 2014-2015                                   |
+  | Copyright SYSTOPIA (c) 2014-2024                                   |
   +--------------------------------------------------------------------+
   | This is free software; you can copy, modify, and distribute it     |
   | under the terms of the GNU Affero General Public License           |
@@ -173,7 +173,7 @@ class CRM_Utils_Geocode_OpenStreetMapCoding {
       // everybody to do with the organisation along with an identifier for the
       // organisation could be sensitive.
       // @see https://operations.osmfoundation.org/policies/nominatim/
-      $appName =  CRM_Core_Config::singleton()->geoAPIKey ?: substr(sha1(CRM_Core_BAO_Domain::getDomain()->name . CIVICRM_SITE_KEY), 0, 12);
+      $appName = CRM_Core_Config::singleton()->geoAPIKey ?: substr(sha1(CRM_Core_BAO_Domain::getDomain()->name . CIVICRM_SITE_KEY), 0, 12);
       $request = $client->request('GET', $url, ['headers' => ['User-Agent' => "CiviCRM instance ($appName)"]]);
 
       // check if request was successful
@@ -190,8 +190,7 @@ class CRM_Utils_Geocode_OpenStreetMapCoding {
       }
 
       // Process results
-      $string = $request->getBody();
-      $json = json_decode($string);
+      $json = json_decode($request->getBody()->getContents(), TRUE, 512, JSON_THROW_ON_ERROR);
     }
 
     if (is_null($json) || !is_array($json)) {
@@ -214,8 +213,8 @@ class CRM_Utils_Geocode_OpenStreetMapCoding {
       // Save in cache.
       $cache->set($cacheKey, $json);
       return [
-        'geo_code_1' => (float) substr($json[0]->lat, 0, 12),
-        'geo_code_2' => (float) substr($json[0]->lon, 0, 12),
+        'geo_code_1' => (float) substr($json[0]['lat'], 0, 12),
+        'geo_code_2' => (float) substr($json[0]['lon'], 0, 12),
       ];
 
     }
