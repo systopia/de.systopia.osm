@@ -3,7 +3,7 @@
   +--------------------------------------------------------------------+
   | CiviCRM OSM Geocoding module (SYS-OSM)                             |
   +--------------------------------------------------------------------+
-  | Copyright SYSTOPIA (c) 2021                                        |
+  | Copyright SYSTOPIA (c) 2024                                        |
   +--------------------------------------------------------------------+
   | This is free software; you can copy, modify, and distribute it     |
   | under the terms of the GNU Affero General Public License           |
@@ -21,7 +21,7 @@
   | GNU Affero General Public License or the licensing of CiviCRM,     |
   | see the CiviCRM license FAQ at http://civicrm.org/licensing        |
   +--------------------------------------------------------------------+
-*/
+ */
 
 
 /**
@@ -40,7 +40,8 @@ class CRM_Utils_Geocode_DummyGeocoder {
    * @return boolean true if we modified the address, false otherwise
    * @static
    */
-  static function format(&$values, $stateName = FALSE) {
-    return true;
+  public static function format(&$values, $stateName = FALSE) {
+    return TRUE;
   }
+
 }
