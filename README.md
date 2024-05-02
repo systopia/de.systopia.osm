@@ -13,7 +13,7 @@ Therefore we recommend that you consider using the throttling option for the
 "Geocode and Parse Adresses" cronjob if processing data sets containing more
 than 10.000 addresses.
 
-Find the [German README here](./german.md).
+Find the [German README here](./docs/german.md).
 
 Remark: Be careful when activating the "Geocode and Parse Addresses" scheduled
 job. It will try to look up all addresses that have not been geocoded yet. That,
