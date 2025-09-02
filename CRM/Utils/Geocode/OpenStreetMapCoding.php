@@ -142,7 +142,7 @@ class CRM_Utils_Geocode_OpenStreetMapCoding {
   }
 
   public static function getCoordinates($address): array {
-    return self::makeRequest(urlencode($address));
+    return self::makeRequest("https://" . self::$_server . self::$_uri . '?format=json&q=' . urlencode($address));
   }
 
   /**
