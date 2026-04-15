@@ -72,9 +72,7 @@ class CRM_Utils_Geocode_OpenStreetMapCoding {
    * @static
    */
   public static function format(&$values, $stateName = FALSE) {
-    CRM_Utils_System::checkPHPVersion(5, TRUE);
-
-    $params = array();
+    $params = [];
 
     // TODO: is there a more failsafe format for street and street-number?
     if (!empty($values['street_address'])) {
